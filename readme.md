@@ -1,4 +1,4 @@
-Software Name as Headline
+Logistic Regression Training Routine (Accord.net)
 ======
 **LRTrain** Logistic Regressin Training routine. Required Accord.net: Math, IO and Statistical Routines, saves a 
 trained regression model to disk.

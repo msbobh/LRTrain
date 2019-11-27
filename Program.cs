@@ -7,6 +7,7 @@ using Accord.Statistics.Models.Regression;
 using Accord.Math;
 using Accord.IO;
 using Funcs;
+using resources;
 
 
 namespace AccordLogisticRegression
@@ -16,26 +17,67 @@ namespace AccordLogisticRegression
         
         static void Main(string[] args)
         {
-            Console.WriteLine(" Running (Accord.net) logistic Regression ");
-            string trainingfile = args[0];
-            string labelfile = args[1];
+            const int minargs = 2;
+            const int maxargs = 3;
+            int numArgs = Utility.parseCommandLine(args, maxargs, minargs);
+            if (numArgs == 0)
+            {
+                Console.WriteLine(strings.usage);
+                System.Environment.Exit(1);
+            }
+            string trainingfile = null;
+            string labelfile = null;
             
+            if (numArgs == 2)
+            {
+                trainingfile = args[0];
+                labelfile = args[1];
+
+            }
+             if (numArgs == 3) // no use for third parameter yet!
+            {
+                Console.WriteLine(strings.usage);
+                System.Environment.Exit(1);
+            }
+
+            if (!Utility.checkFile(trainingfile))
+            {
+                Console.WriteLine("Error opening file{0}", trainingfile);
+                System.Environment.Exit(1);
+
+            }
+            if (!Utility.checkFile(labelfile))
+            {
+                Console.WriteLine("Error opening file {0}", labelfile);
+                System.Environment.Exit(1);
+            }
+                       
+                            
+            Console.WriteLine(" Logistic Regression (Accord.net) Training Utility");
+                        
+            // Read in the training file and convert to a Matrix
             CsvReader training_samples = new CsvReader(trainingfile, false);
-            //int cols = training_samples.Columns();
             double[,] MatrixIn = training_samples.ToMatrix<double>();
+            
             int rows = MatrixIn.Rows();
             int cols = MatrixIn.Columns();
-
+        
+            // Read in the label file an convert to a Matrix
             CsvReader labelscsv = new CsvReader(labelfile, false);
             double[,] labels = labelscsv.ToMatrix<double>();
+            
+            if (rows != labels.Rows())
+            {
+                Console.WriteLine(strings.SampleMisMatch, cols, 4);
+                System.Environment.Exit(1);
+            }
                        
-
+            // Apparantly if import direclty to Jagged from the csv Accord does not parse the data correctly.
             // For Accord.net Logistic Regression the input data needs to be in Jagged Arrays         
             double [][] input1 = Funcs.Utility.convertToJaggedArray(MatrixIn);
             // Labels can either be int (1,0) or bools
             int [] output1 = Utility.convetToJaggedArray(labels);
-
-               
+                    
 
             var learner = new IterativeReweightedLeastSquares<LogisticRegression>()
             {
@@ -48,11 +90,11 @@ namespace AccordLogisticRegression
             // Now, we can use the learner to finally estimate our model:
             LogisticRegression regression = learner.Learn(input1, output1);
 
-            
-            // Write the model out to a save file
 
+            // Write the model out to a save file
+            string modelsavefilename = trainingfile.Replace(".csv", ".save");
             double[] scores = regression.Probability(input1);
-            string modelsavefilename = "RegressionModel.save";
+            
             regression.Save(modelsavefilename, compression: SerializerCompression.None);
 
             // Finally, if we would like to arrive at a conclusion regarding

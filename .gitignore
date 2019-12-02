@@ -10,3 +10,5 @@ bin/Debug/AccordLogisticRegression.pdb
 .vs/
 obj/Debug/AccordLogisticRegression.csprojAssemblyReference.cache
 bin/Debug/ex2regmaptrainNoones.save
+bin/Debug/*.save
+        

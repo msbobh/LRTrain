@@ -17,3 +17,5 @@ C:\Users\rober\github\LRTrain\obj\Debug\LRTrain.csprojAssemblyReference.cache
 C:\Users\rober\github\LRTrain\obj\Debug\LRTrain.csproj.CopyComplete
 C:\Users\rober\github\LRTrain\obj\Debug\LRTrain.exe
 C:\Users\rober\github\LRTrain\obj\Debug\LRTrain.pdb
+C:\Users\rober\github\LRTrain\bin\Debug\Accord.MachineLearning.dll
+C:\Users\rober\github\LRTrain\bin\Debug\Accord.MachineLearning.xml

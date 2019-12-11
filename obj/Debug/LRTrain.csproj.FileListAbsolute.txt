@@ -13,9 +13,9 @@ C:\Users\rober\github\LRTrain\bin\Debug\Accord.IO.xml
 C:\Users\rober\github\LRTrain\bin\Debug\Accord.Math.xml
 C:\Users\rober\github\LRTrain\bin\Debug\Accord.Math.Core.xml
 C:\Users\rober\github\LRTrain\bin\Debug\Accord.Statistics.xml
-C:\Users\rober\github\LRTrain\obj\Debug\LRTrain.csprojAssemblyReference.cache
 C:\Users\rober\github\LRTrain\obj\Debug\LRTrain.csproj.CopyComplete
 C:\Users\rober\github\LRTrain\obj\Debug\LRTrain.exe
 C:\Users\rober\github\LRTrain\obj\Debug\LRTrain.pdb
 C:\Users\rober\github\LRTrain\bin\Debug\Accord.MachineLearning.dll
 C:\Users\rober\github\LRTrain\bin\Debug\Accord.MachineLearning.xml
+C:\Users\rober\github\LRTrain\obj\Debug\LRTrain.csprojAssemblyReference.cache

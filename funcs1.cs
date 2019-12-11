@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using Accord.Math;
 using System.IO;
 
@@ -99,6 +100,24 @@ namespace Funcs
             {
                 return false;
             }
+        }
+
+        static public double CalculateAccuraccy(int[] labels, int[] Predictions)
+        {
+            
+            int index = 0;
+            double subtotal = 0;
+            foreach (var result in Predictions)
+            {
+                if (result == labels[index])
+                {
+                    subtotal = subtotal + 1;
+                }
+                index++;
+            }
+
+            double Accuracy = subtotal / Predictions.Count();
+            return Accuracy;
         }
            
     }

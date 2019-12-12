@@ -9,3 +9,9 @@ bin/Debug/AccordLogisticRegression.pdb
 .vs/obj/Debug/AccordLogisticRegression.csprojAssemblyReference.cache
 .vs/
 obj/Debug/AccordLogisticRegression.csprojAssemblyReference.cache
+bin/Debug/ex2regmaptrainNoOnes.BFGS.save
+bin/Debug/ex2regmaptrainNoOnes.IRLS.save
+bin/Debug/ex2regmaptrainNoOnes.MLR.save
+bin/Debug/ex2regmaptrainNoOnes.PCD.save
+bin/Debug/resumesfirst750.BFGS.save
+bin/Debug/resumesfirst750.PCD.save

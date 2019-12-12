@@ -1,12 +1,12 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using Accord.Statistics.Models.Regression.Fitting;
 using Accord.Statistics.Models.Regression;
 using Accord.Math;
 using Accord.IO;
 using Funcs;
+using resources;
+using LearningRountines;
+
 
 
 namespace AccordLogisticRegression
@@ -16,78 +16,102 @@ namespace AccordLogisticRegression
         
         static void Main(string[] args)
         {
-            Console.WriteLine(" Running (Accord.net) logistic Regression ");
-            string trainingfile = args[0];
-            string labelfile = args[1];
+            /* 
+             * some declartions
+             */
+            string trainingfile = null;
+            string labelfile = null;
+            const int minargs = 2;
+            const int maxargs = 3;
             
+            int numArgs = Utility.parseCommandLine(args, maxargs, minargs);
+            if (numArgs == 0)
+            {
+                Console.WriteLine(strings.usage);
+                System.Environment.Exit(1);
+            }
+                        
+            if (numArgs == 2)
+            {
+                trainingfile = args[0];
+                labelfile = args[1];
+
+            }
+             if (numArgs == 3) // no use for third parameter yet!
+            {
+                Console.WriteLine(strings.usage);
+                System.Environment.Exit(1);
+            }
+
+            if (!Utility.checkFile(trainingfile))
+            {
+                Console.WriteLine("Error opening file{0}", trainingfile);
+                System.Environment.Exit(1);
+
+            }
+            if (!Utility.checkFile(labelfile))
+            {
+                Console.WriteLine("Error opening file {0}", labelfile);
+                System.Environment.Exit(1);
+            }
+                       
+                            
+            Console.WriteLine(" Logistic Regression (Accord.net) Training Utility Starting...");
+            Console.WriteLine("Learning 3 differernt Models: Profbablistic Coordinate Descent, Iterative Reweighted Least Squares, Conjugate Gradient Descent (BFGS)");
+
+            // 
+            // Read in the training file an convert to a Matrix
+            //
             CsvReader training_samples = new CsvReader(trainingfile, false);
-            //int cols = training_samples.Columns();
             double[,] MatrixIn = training_samples.ToMatrix<double>();
+            
             int rows = MatrixIn.Rows();
             int cols = MatrixIn.Columns();
-
+        
+            // 
+            // Read in the label file an convert to a Matrix
+            //
             CsvReader labelscsv = new CsvReader(labelfile, false);
             double[,] labels = labelscsv.ToMatrix<double>();
+            
+            if (rows != labels.Rows()) // number of samples must match
+            {
+                Console.WriteLine(strings.SampleMisMatch, cols, 4);
+                System.Environment.Exit(1);
+            }
                        
-
             // For Accord.net Logistic Regression the input data needs to be in Jagged Arrays         
-            double [][] input1 = Funcs.Utility.convertToJaggedArray(MatrixIn);
+            double[][] input1 = MatrixIn.ToJagged<double>();
+            
             // Labels can either be int (1,0) or bools
             int [] output1 = Utility.convetToJaggedArray(labels);
 
-               
+            // Learn a  Probablilistic Coordinate Descent model
+            //
 
-            var learner = new IterativeReweightedLeastSquares<LogisticRegression>()
-            {
-                                   // Gets or sets the tolerance value used to determine whether the algorithm has converged.
-                Tolerance = 1e-4,  // Let's set some convergence parameters
-                MaxIterations = 100,  // maximum number of iterations to perform
-                Regularization = 0
-            };
-
-            // Now, we can use the learner to finally estimate our model:
-            LogisticRegression regression = learner.Learn(input1, output1);
-
+            Console.WriteLine("starting Probabliistic Gradient Descent");
+            int[] svmpredicts = MLAlgorithms.ProbabilisticCoordinetDescent (input1, output1, trainingfile);
+            double svmaccuracy = Funcs.Utility.CalculateAccuraccy(svmpredicts, output1);
             
-            // Write the model out to a save file
+            Console.WriteLine("Probablistic Coordinate Descent w/SVM Accuracy:{0}", Math.Round(svmaccuracy * 100, 2));
+            // Compute the classification error as in SVM example
+            double error = new Accord.Math.Optimization.Losses.ZeroOneLoss(output1).Loss(svmpredicts);
+            Console.WriteLine("Zero One Loss:{0}", Math.Round(error, 2));
 
-            double[] scores = regression.Probability(input1);
-            string modelsavefilename = "RegressionModel.save";
-            regression.Save(modelsavefilename, compression: SerializerCompression.None);
+            //Console.WriteLine("starting Multinomial Logistic Regression");
+            //int[] BFGSPredicts = MLAlgorithms.MultiNomialLogisticRegressionBFGS (input1, output1, trainingfile.Replace(".csv", ".BFGS.save"));
+            //double BFGSAccuracy = Utility.CalculateAccuraccy (BFGSPredicts, output1);
+            //Console.WriteLine("Multi Nomial Logistic Regression using BFGS\nAccuracy => {0}", Math.Round(BFGSAccuracy * 100, 2));
 
-            // Finally, if we would like to arrive at a conclusion regarding
-            // each sample, we can use the Decide method, which will transform
-            // the probabilities (from 0 to 1) into actual true/false values:
+            Console.WriteLine("starting IterativeLeast Squares");
+            int[] IRLSPredicts = MLAlgorithms.IterativeLeastSquares(input1, output1, trainingfile);
+            double IRLSAccuracy = Utility.CalculateAccuraccy (IRLSPredicts, output1);
+            Console.WriteLine("Iterative Least Squares (IRLS)\nAccuracy => {0}", Math.Round(IRLSAccuracy * 100, 2));
 
-            bool [] actual = regression.Decide(input1);
-            // mean(double(p == y)) * 100);
-
-            double[,] learnedParams = Utility.converRowtoColumn( regression.Weights);
-
-            string filename = "LearnedParams.csv";
-                                 
-            
-            using (CsvWriter writer = new CsvWriter(filename))
-            {
-                writer.Write(learnedParams);
-            }
-            
-            int[] predictions = Utility.BoolToInt(actual);           
-            double subtotal = 0;
-            int index = 0;
-            foreach (var result in predictions)
-            {
-                if(result == output1[index])
-                {
-                    subtotal = subtotal + 1;
-                }
-                index++;
-            }
-            double accuracy =  subtotal / predictions.Count();
-            Console.WriteLine("Predicted accuracy:{0}", Math.Round(accuracy * 100, 2));
-            
-
-                
+            Console.WriteLine("starting Multinomial Log Regression Newton Raphson");
+            int[] MNLRPredicts = MLAlgorithms.MultiNomialLogRegressionLowerBoundNewtonRaphson(input1, output1, trainingfile);
+            double MNLRAccuracy = Funcs.Utility.CalculateAccuraccy(MNLRPredicts, output1);
+            Console.WriteLine("Multinomial Logistic Regression using LB Newton Raphson (MNLR)\nAccuracy => {0}", Math.Round(MNLRAccuracy * 100, 2));
         }
     }
 }

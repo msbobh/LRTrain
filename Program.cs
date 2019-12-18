@@ -98,10 +98,10 @@ namespace AccordLogisticRegression
             double error = new Accord.Math.Optimization.Losses.ZeroOneLoss(output1).Loss(svmpredicts);
             Console.WriteLine("Zero One Loss:{0}", Math.Round(error, 2));
 
-            //Console.WriteLine("starting Multinomial Logistic Regression");
-            //int[] BFGSPredicts = MLAlgorithms.MultiNomialLogisticRegressionBFGS (input1, output1, trainingfile.Replace(".csv", ".BFGS.save"));
-            //double BFGSAccuracy = Utility.CalculateAccuraccy (BFGSPredicts, output1);
-            //Console.WriteLine("Multi Nomial Logistic Regression using BFGS\nAccuracy => {0}", Math.Round(BFGSAccuracy * 100, 2));
+            Console.WriteLine("starting Multinomial Logistic Regression");
+            int[] BFGSPredicts = MLAlgorithms.MultiNomialLogisticRegressionBFGS (input1, output1, trainingfile.Replace(".csv", ".BFGS.save"));
+            double BFGSAccuracy = Utility.CalculateAccuraccy (BFGSPredicts, output1);
+            Console.WriteLine("Multi Nomial Logistic Regression using BFGS\nAccuracy => {0}", Math.Round(BFGSAccuracy * 100, 2));
 
             Console.WriteLine("starting IterativeLeast Squares");
             int[] IRLSPredicts = MLAlgorithms.IterativeLeastSquares(input1, output1, trainingfile);

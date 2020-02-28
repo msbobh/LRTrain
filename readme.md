@@ -3,17 +3,24 @@ Logistic Regression Training Routine (Accord.net)
 **LRTrain** Logistic Regressin Training routine. Required Accord.net: Math, IO and Statistical Routines, saves a 
 trained regression model to disk.
 
+LRTrain:
+Loads a training file specified from the CL
+Loads a label file specified from the CL 
 
+The files are required to be in csv format, conversion to the appropriate format is done internal to the program
+It then trains a Logistic Regressions from the supplied data, using a library from Accord.net.  The following algorithms are invoked:
+Multinomial Logistic Regression BFGS
+Iterative Least Squares(Note this algorithm is very slow on data sets with large numbers of features)
+Multinomial Logistic Regression Lower Bound Newton Raphson.
 
+The models are saved in the following format <trainfilename>.modeltype.save where modeltype = BFGS | PCD | IRLS)
 
 ## Usage
 ```$ git clone https://github.com/msbobh/LRTrain.git
 ...
 ```
 ## Contributors
-
-### Contributors on GitHub
-* [Contributors](https://github.com/msbobh/LRTrain/graphs/contributors)
+Bob Hildreth
 
 ### Third party libraries
 * Uses Accord.Net 
@@ -22,12 +29,10 @@ trained regression model to disk.
 ## Version 
 * Version 0.1
 
-## How-to use this code
-* see [INSTRUCTIONS](https://github.com/username/sw-name/blob/master/INSTRUCTIONS.md) file
 
 ## Contact
 #### Bob/HAL/R
 * Homepage: 
 * e-mail: Bobh@thehildreths.com
 
-[![Flattr this git repo](http://api.flattr.com/button/flattr-badge-large.png)](https://flattr.com/submit/auto?user_id=username&url=https://github.com/username/sw-name&title=sw-name&language=&tags=github&category=software) 
+

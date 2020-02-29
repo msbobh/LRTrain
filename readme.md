@@ -14,6 +14,28 @@ Iterative Least Squares(Note this algorithm is very slow on data sets with large
 Multinomial Logistic Regression Lower Bound Newton Raphson.
 
 The models are saved in the following format <trainfilename>.modeltype.save where modeltype = BFGS | PCD | IRLS)
+  
+## Accord Routines
+
+    The L-BFGS algorithm is a member of the broad family of quasi-Newton optimization methods.
+                L-BFGS stands for 'Limited memory BFGS'. Indeed, L-BFGS uses a limited memory variation of
+                the Broyden–Fletcher–Goldfarb–Shanno (BFGS) update to approximate the inverse Hessian matrix
+                (denoted by Hk). Unlike the original BFGS method which stores a dense approximation, L-BFGS
+                stores only a few vectors that represent the approximation implicitly. Due to its moderate
+                memory requirement, L-BFGS method is particularly well suited for optimization problems with
+                a large number of variables. 
+               
+
+ // http://accord-framework.net/docs/html/T_Accord_MachineLearning_VectorMachines_Learning_ProbabilisticCoordinateDescent.htm
+              This class implements a SupportVectorMachine learning algorithm specifically crafted for
+                probabilistic linear machines only. It provides a L1- regularized coordinate descent learning
+                algorithm for optimizing the learning problem. The code has been based on liblinear's method
+                solve_l1r_lr method, whose original description is provided below.
+                
+                Liblinear's solver -s 6: L1R_LR. A coordinate descent algorithm for L1-regularized logistic
+                regression (probabilistic svm) problems.
+               
+
 
 ## Usage
 ```$ git clone https://github.com/msbobh/LRTrain.git

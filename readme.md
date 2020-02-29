@@ -26,14 +26,14 @@ The models are saved in the following format <trainfilename>.modeltype.save wher
                 a large number of variables. 
                
 
- // http://accord-framework.net/docs/html/T_Accord_MachineLearning_VectorMachines_Learning_ProbabilisticCoordinateDescent.htm
+ http://accord-framework.net/docs/html/T_Accord_MachineLearning_VectorMachines_Learning_ProbabilisticCoordinateDescent.htm
               This class implements a SupportVectorMachine learning algorithm specifically crafted for
-                probabilistic linear machines only. It provides a L1- regularized coordinate descent learning
-                algorithm for optimizing the learning problem. The code has been based on liblinear's method
-                solve_l1r_lr method, whose original description is provided below.
+              probabilistic linear machines only. It provides a L1- regularized coordinate descent learning
+              algorithm for optimizing the learning problem. The code has been based on liblinear's method
+              solve_l1r_lr method, whose original description is provided below.
                 
-                Liblinear's solver -s 6: L1R_LR. A coordinate descent algorithm for L1-regularized logistic
-                regression (probabilistic svm) problems.
+              Liblinear's solver -s 6: L1R_LR. A coordinate descent algorithm for L1-regularized logistic
+              regression (probabilistic svm) problems.
                
 
 

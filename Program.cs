@@ -112,7 +112,7 @@ namespace AccordLogisticRegression
             Console.WriteLine(" Iterative Least Squares (IRLS)\nAccuracy => {0}\n", Math.Round(IRLSAccuracy * 100, 2));
             */
 
-            // Commeting out this method, it is too long running on the resume data set.
+            // Commenting out this method, it is too long running on the resume data set.
 
             /* Console.WriteLine("starting Multinomial Log Regression w/ Lowerbound Newton Raphson");
             int[] MNLRPredicts = MLAlgorithms.MultiNomialLogRegressionLowerBoundNewtonRaphson(input1, output1, trainingfile);

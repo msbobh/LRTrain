@@ -2,7 +2,9 @@
 using Accord.Statistics.Models.Regression;
 using Accord.Math.Optimization;
 using Accord.IO;
-
+using Accord.Statistics.Analysis; // Needed for confusion matrix
+using Accord.Math.Optimization.Losses; // needed for use of Zero One Loss routine
+using Accord.MachineLearning; // Needed for cross validation
 
 namespace LearningRountines
 {
@@ -17,7 +19,8 @@ namespace LearningRountines
             {
                 // Gets or sets the tolerance value used to determine whether the algorithm has converged.
                 Tolerance = 1e-4,  // Let's set some convergence parameters
-                MaxIterations = 100,  // maximum number of iterations to perform
+                MaxIterations = 10,
+                //MaxIterations = 100,  // maximum number of iterations to perform
                 Regularization = 0
             };
 
@@ -49,11 +52,23 @@ namespace LearningRountines
              * a large number of variables. 
              */
 
-            // Create a Conjugate Gradient algorithm to estimate the regression
+            // Create a Conjugate Gradient model to estimate the regression and create a cross validation Result
             var mlbfgs = new MultinomialLogisticLearning<BroydenFletcherGoldfarbShanno>();
             
             // Now, we can estimate our model using BFGS
             MultinomialLogisticRegression mlr = mlbfgs.Learn(input, labels);
+            
+            // Create a cross validaiton result based on L-BFGS
+            var cv = CrossValidation.Create(k: 4, learner: (p) => new MultinomialLogisticLearning<BroydenFletcherGoldfarbShanno>(), 
+                loss: (actual, expected, p) => new ZeroOneLoss(expected).Loss(actual),
+                fit: (teacher, x, y, w) => teacher.Learn(x, y, w),
+                x: input, y: labels);
+            var result = cv.Learn(input, labels);
+
+            System.Console.WriteLine(   "Cross Validation Mean {0}, Training Error {1}", result.Validation.Mean, result.Training.Variance);
+
+            GeneralConfusionMatrix gcm = result.ToConfusionMatrix(input, labels);
+            System.Console.WriteLine("  Create general confusion matrix, accuracy = {0}\n", gcm.Accuracy * 100);
 
             // We can compute the model answers
             int[] answers = mlr.Decide(input);

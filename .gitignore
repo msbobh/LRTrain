@@ -13,3 +13,8 @@ bin/Debug/ex2regmaptrainNoones.save
 bin/Debug/*.save
 bin/Release/*.*
 obj/Release/*.*
+bin/Debug/LRTrain.exe
+bin/Debug/LRTrain.pdb
+obj/Debug/LRTrain.csproj.FileListAbsolute.txt
+obj/Debug/LRTrain.exe
+obj/Debug/LRTrain.pdb

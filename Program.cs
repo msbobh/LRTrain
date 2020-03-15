@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Linq;
 using Accord.Statistics.Models.Regression;
 using Accord.Math;
 using Accord.IO;
@@ -89,19 +88,22 @@ namespace AccordLogisticRegression
             // Learn a  Probabilistic Coordinate Descent model
             //
 
+            // commenting this routine out, as it is a linear solver
+            /*
             Console.WriteLine("Starting Probabilistic Gradient Descent");
             int[] svmpredicts = MLAlgorithms.ProbabilisticCoordinetDescent (input1, output1, trainingfile);
             double svmaccuracy = Funcs.Utility.CalculateAccuraccy(svmpredicts, output1);
-            
+                        
             Console.WriteLine(" Probablistic Coordinate Descent w/SVM Accuracy:{0}", Math.Round(svmaccuracy * 100, 2));
             // Compute the classification error as in SVM example
             double error = new Accord.Math.Optimization.Losses.ZeroOneLoss(output1).Loss(svmpredicts);
             Console.WriteLine("Zero One Loss:{0}\n", Math.Round(error, 2));
+            */
 
-            Console.WriteLine("Starting Multinomial Logistic Regression L-BFGS");
+            Console.WriteLine("Starting Multinomial Logistic Regression using L-BFGS");
             int[] BFGSPredicts = MLAlgorithms.MultiNomialLogisticRegressionBFGS (input1, output1, trainingfile.Replace(".csv", ".BFGS.save"));
             double BFGSAccuracy = Utility.CalculateAccuraccy (BFGSPredicts, output1);
-            Console.WriteLine(" Multi Nomial Logistic Regression using BFGS\nAccuracy => {0}\n", Math.Round(BFGSAccuracy * 100, 2));
+            Console.WriteLine(" Training Accuracy => {0}%\n", Math.Round(BFGSAccuracy * 100, 2));
 
             // Commenting this algorithm out, after running for a few hours on a 25 sample resume file it got an out of memeory error
             

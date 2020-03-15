@@ -51,15 +51,20 @@ namespace LearningRountines
              * memory requirement, L-BFGS method is particularly well suited for optimization problems with
              * a large number of variables. 
              */
-
-            // Create a Conjugate Gradient model to estimate the regression and create a cross validation Result
+             
+            // Create a lbfgs model
             var mlbfgs = new MultinomialLogisticLearning<BroydenFletcherGoldfarbShanno>();
-            
-            // Now, we can estimate our model using BFGS
+
+            // Estimate using the data against a logistic regression
             MultinomialLogisticRegression mlr = mlbfgs.Learn(input, labels);
-            
-            // Create a cross validaiton result based on L-BFGS
-            var cv = CrossValidation.Create(k: 4, learner: (p) => new MultinomialLogisticLearning<BroydenFletcherGoldfarbShanno>(), 
+
+            // 
+            // Create a cross validation model derived from the training set to measure the performance of this
+            // predictive model and estimate how well we expect the model will generalize. The algorithm executes
+            // multiple rounds of cross validation on different partitions and averages the results. 
+            //
+            int folds = 4; // could play around with this later
+            var cv = CrossValidation.Create(k: folds, learner: (p) => new MultinomialLogisticLearning<BroydenFletcherGoldfarbShanno>(), 
                 loss: (actual, expected, p) => new ZeroOneLoss(expected).Loss(actual),
                 fit: (teacher, x, y, w) => teacher.Learn(x, y, w),
                 x: input, y: labels);
@@ -68,9 +73,9 @@ namespace LearningRountines
             System.Console.WriteLine(   "Cross Validation Mean {0}, Training Error {1}", result.Validation.Mean, result.Training.Variance);
 
             GeneralConfusionMatrix gcm = result.ToConfusionMatrix(input, labels);
-            System.Console.WriteLine("  Create general confusion matrix, accuracy = {0}\n", gcm.Accuracy * 100);
+            System.Console.WriteLine("  General confusion matrix accuracy = {0}%\n", gcm.Accuracy * 100);
 
-            // We can compute the model answers
+            // Compute the model predictions and return the values
             int[] answers = mlr.Decide(input);
             
             // And also the probability of each of the answers

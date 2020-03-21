@@ -85,22 +85,22 @@ namespace AccordLogisticRegression
             // Labels can either be int (1,0) or bools
             int [] output1 = Utility.convetToJaggedArray(labels);
 
-            // Learn a  Probabilistic Coordinate Descent model
+            // Learn a  Probabilistic Coordinate Descent model using a large margin solver (SVM) with L1 Regularization
             //
 
             // commenting this routine out, as it is a linear solver
-            /*
-            Console.WriteLine("Starting Probabilistic Gradient Descent");
-            int[] svmpredicts = MLAlgorithms.ProbabilisticCoordinetDescent (input1, output1, trainingfile);
+            
+            Console.WriteLine("Starting Probabilistic Coordinate Descent");
+            int[] svmpredicts = MLAlgorithms.ProbabilisticCoordinateDescent (input1, output1, trainingfile);
             double svmaccuracy = Funcs.Utility.CalculateAccuraccy(svmpredicts, output1);
                         
-            Console.WriteLine(" Probablistic Coordinate Descent w/SVM Accuracy:{0}", Math.Round(svmaccuracy * 100, 2));
+            Console.WriteLine(" Probablistic Coordinate Descent training Accuracy:{0}", Math.Round(svmaccuracy * 100, 2));
             // Compute the classification error as in SVM example
             double error = new Accord.Math.Optimization.Losses.ZeroOneLoss(output1).Loss(svmpredicts);
-            Console.WriteLine("Zero One Loss:{0}\n", Math.Round(error, 2));
-            */
+            
+            
 
-            Console.WriteLine("Starting Multinomial Logistic Regression using L-BFGS");
+            Console.WriteLine("\nStarting Multinomial Logistic Regression using L-BFGS");
             int[] BFGSPredicts = MLAlgorithms.MultiNomialLogisticRegressionBFGS (input1, output1, trainingfile.Replace(".csv", ".BFGS.save"));
             double BFGSAccuracy = Utility.CalculateAccuraccy (BFGSPredicts, output1);
             Console.WriteLine(" Training Accuracy => {0}%\n", Math.Round(BFGSAccuracy * 100, 2));

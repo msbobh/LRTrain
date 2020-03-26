@@ -2,6 +2,7 @@
 using System.Linq;
 using Accord.Math;
 using System.IO;
+using resources;
 
 
 namespace Funcs 
@@ -119,7 +120,44 @@ namespace Funcs
             double Accuracy = subtotal / Predictions.Count();
             return Accuracy;
         }
-           
+
+        static public void Printcolor(int title, ConsoleColor color)
+        {
+            ConsoleColor originalColor = Console.ForegroundColor;
+            Console.ForegroundColor = color;
+            Console.WriteLine(title);
+            Console.ForegroundColor = originalColor;
+        }
+        static public void Printcolor (double title, ConsoleColor color)
+        {
+            ConsoleColor originalColor = Console.ForegroundColor; 
+            Console.ForegroundColor = color;
+            Console.WriteLine(title);
+            Console.ForegroundColor = originalColor;
+        }
+
+        static public void OutPutStats( in int Numsamples,in  int Numinputs, in double TrMean, in double GCMAccuracy,
+            in int CMFalsePos, in int CMFalseNeg,in double CMFscore)
+        {
+            Console.WriteLine("  Generating a cross validation for the dataset");
+            Console.Write(strings.CrossVSamples);
+            Funcs.Utility.Printcolor(Numsamples, ConsoleColor.Yellow);
+            Console.Write(strings.CrossValFeatures);
+            Funcs.Utility.Printcolor(Numinputs, ConsoleColor.Yellow);
+            Console.Write(strings.CrossTrainMean);
+            Funcs.Utility.Printcolor( TrMean, ConsoleColor.Yellow);
+            Console.Write(strings.ConfusionAcc);
+            Funcs.Utility.Printcolor(Math.Round(GCMAccuracy * 100, 2), ConsoleColor.Red);
+            Console.WriteLine(strings.TrResults);
+            Console.Write(strings.FalsePos);
+            Funcs.Utility.Printcolor(CMFalsePos, ConsoleColor.Red);
+            Console.Write(strings.FalseNeg);
+            Funcs.Utility.Printcolor(CMFalseNeg, ConsoleColor.Red);
+            Console.Write(strings.Fscore);
+            Funcs.Utility.Printcolor(Math.Round(CMFscore, 2), ConsoleColor.Red);
+            Console.WriteLine();
+        }
+
     }
 
 }

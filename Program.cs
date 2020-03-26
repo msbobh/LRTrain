@@ -93,8 +93,9 @@ namespace AccordLogisticRegression
             Console.WriteLine("Starting Probabilistic Coordinate Descent");
             int[] svmpredicts = MLAlgorithms.ProbabilisticCoordinateDescent (input1, output1, trainingfile);
             double svmaccuracy = Funcs.Utility.CalculateAccuraccy(svmpredicts, output1);
-                        
-            Console.WriteLine(" Probablistic Coordinate Descent training Accuracy:{0}", Math.Round(svmaccuracy * 100, 2));
+
+            Console.Write(" Probablistic Coordinate Descent training Accuracy: ");
+            Funcs.Utility.Printcolor(Math.Round(svmaccuracy * 100, 2), ConsoleColor.Red);
             // Compute the classification error as in SVM example
             double error = new Accord.Math.Optimization.Losses.ZeroOneLoss(output1).Loss(svmpredicts);
             
@@ -103,7 +104,9 @@ namespace AccordLogisticRegression
             Console.WriteLine("\nStarting Multinomial Logistic Regression using L-BFGS");
             int[] BFGSPredicts = MLAlgorithms.MultiNomialLogisticRegressionBFGS (input1, output1, trainingfile.Replace(".csv", ".BFGS.save"));
             double BFGSAccuracy = Utility.CalculateAccuraccy (BFGSPredicts, output1);
-            Console.WriteLine(" Training Accuracy => {0}%\n", Math.Round(BFGSAccuracy * 100, 2));
+            Console.Write(" Multinomial LR Training Accuracy => ");
+            Funcs.Utility.Printcolor(Math.Round(BFGSAccuracy * 100,2),ConsoleColor.Red);
+            Console.WriteLine();
 
             // Commenting this algorithm out, after running for a few hours on a 25 sample resume file it got an out of memeory error
             
@@ -116,11 +119,12 @@ namespace AccordLogisticRegression
 
             // Commenting out this method, it is too long running on the resume data set.
 
-            /* Console.WriteLine("starting Multinomial Log Regression w/ Lowerbound Newton Raphson");
+            Console.WriteLine("starting Multinomial Log Regression w/ Lowerbound Newton Raphson");
             int[] MNLRPredicts = MLAlgorithms.MultiNomialLogRegressionLowerBoundNewtonRaphson(input1, output1, trainingfile);
             double MNLRAccuracy = Funcs.Utility.CalculateAccuraccy(MNLRPredicts, output1);
-            Console.WriteLine("Multinomial Logistic Regression using LB Newton Raphson (MNLR)\nAccuracy => {0}", Math.Round(MNLRAccuracy * 100, 2));
-            */
+            Console.Write ("Multinomial Logistic Regression using LB Newton Raphson Training Accuracy => ");
+            Funcs.Utility.Printcolor (Math.Round(MNLRAccuracy * 100, 2), ConsoleColor.Red);
+            
         }
     }
 }

@@ -7,6 +7,7 @@ using Accord.Math.Optimization.Losses; // needed for use of Zero One Loss routin
 using Accord.MachineLearning; // Needed for cross validation
 using System;
 using Accord.MachineLearning.VectorMachines.Learning;
+using Funcs;
 
 namespace LearningRountines
 {
@@ -71,12 +72,14 @@ namespace LearningRountines
                 fit: (teacher, x, y, w) => teacher.Learn(x, y, w),
                 x: input, y: labels);
             var result = cv.Learn(input, labels);
-            
-            System.Console.WriteLine(   "Cross Validation Mean {0}, Training Error {1}", result.Validation.Mean, result.Training.Variance);
-
             GeneralConfusionMatrix gcm = result.ToConfusionMatrix(input, labels);
-            System.Console.WriteLine("  General confusion matrix accuracy = {0}%\n", gcm.Accuracy * 100);
-
+            ConfusionMatrix cm = ConfusionMatrix.Estimate( mlr,input, labels);
+            //
+            //output relevant statistics
+            //
+            Funcs.Utility.OutPutStats(result.NumberOfSamples, result.NumberOfInputs,
+                result.Training.Mean, gcm.Accuracy, cm.FalsePositives, cm.FalseNegatives, cm.FScore);
+                          
             // Compute the model predictions and return the values
             int[] answers = mlr.Decide(input);
             
@@ -122,17 +125,10 @@ namespace LearningRountines
                     // that will be used in cross-validation. 
                     x: input1, y: labels
                     );
-            
             var cvresult = cv.Learn(input1, labels);
-            Console.WriteLine("  Generating a cross validation for the dataset");
-            Console.WriteLine("  Cross Validation samples {0}", cvresult.NumberOfSamples);
-            Console.WriteLine("  Cross Validation features {0}", cvresult.NumberOfInputs);
-            Console.WriteLine("  Cross Validation Training Mean {0}", cvresult.Training.Mean);
             GeneralConfusionMatrix gcm = cvresult.ToConfusionMatrix(input1, labels);
-            Console.WriteLine("  Confusion Matrix Accuracy {0}", gcm.Accuracy);
-
-            
-            var teacher = new ProbabilisticCoordinateDescent()
+                       
+           var teacher = new ProbabilisticCoordinateDescent()
             {
                 Tolerance = 1e-10,
                 Complexity = 1e+10,
@@ -148,11 +144,9 @@ namespace LearningRountines
             var svmregression = (LogisticRegression)svm;
             ConfusionMatrix cm = ConfusionMatrix.Estimate(svm, input1, labels);
             // accuracy, TP, FP, FN, TN and FScore Diagonal
-
-            Console.WriteLine(" Results of Training run");
-            Console.WriteLine(" Accuracy:{0}, False Positives: {1}, False Negatives: {2}, Fscore: {3}\n", cm.Accuracy,
-                cm.FalsePositives, cm.FalseNegatives, cm.FScore);
-
+            Utility.OutPutStats(cvresult.NumberOfSamples, cvresult.NumberOfInputs, cvresult.Training.Mean,
+                gcm.Accuracy, cm.FalsePositives, cm.FalseNegatives, cm.FScore);
+            
             // Write the model out to a save file
             string modelsavefilename = SaveFile.Replace(".csv", ".PCD.save");
 
@@ -162,19 +156,49 @@ namespace LearningRountines
             return Funcs.Utility.BoolToInt(answers);
             
         }
-
-        static public int [] MultiNomialLogRegressionLowerBoundNewtonRaphson (double [][] input1, int[] labels, string SaveFile)
+                static public int [] MultiNomialLogRegressionLowerBoundNewtonRaphson (double [][] input1, int[] labels, string SaveFile)
         {
             // http://accord-framework.net/docs/html/T_Accord_Statistics_Models_Regression_MultinomialLogisticRegression.htm
             // Create a estimation algorithm to estimate the regression
             LowerBoundNewtonRaphson lbnr = new LowerBoundNewtonRaphson()
             {
-                MaxIterations = 100,
+                MaxIterations = 10,
                 Tolerance = 1e-6
             };
+            // *******************************************************************************
+            var cv = CrossValidation.Create(
 
-            // Now, we will iteratively estimate our model:
+                    k: 10, // We will be using 10-fold cross validation
+
+                    // First we define the learning algorithm:
+                    learner: (p) => new LowerBoundNewtonRaphson(),
+
+                    // Now we have to specify how the n.b. performance should be measured:
+                    loss: (actual, expected, p) => new ZeroOneLoss(expected).Loss(actual),
+
+                    // This function can be used to perform any special
+                    // operations before the actual learning is done, but
+                    // here we will just leave it as simple as it can be:
+                    fit: (teach, x, y, w) => teach.Learn(x, y, w),
+
+                    // Finally, we have to pass the input and output data
+                    // that will be used in cross-validation. 
+                    x: input1, y: labels
+                    );
+            // Genrate a cross validation of the data
+            var cvresult = cv.Learn(input1, labels);
+            
+            
+
+            // iteratively estimate the  model
             MultinomialLogisticRegression mlr = lbnr.Learn(input1, labels);
+
+            // Generate statistics from confusion matrices
+            ConfusionMatrix cm = ConfusionMatrix.Estimate(mlr, input1, labels);
+            GeneralConfusionMatrix gcm = cvresult.ToConfusionMatrix(input1, labels);
+
+            Funcs.Utility.OutPutStats(cvresult.NumberOfSamples, cvresult.NumberOfInputs,
+                cvresult.Training.Mean, gcm.Accuracy, cm.FalsePositives, cm.FalseNegatives, cm.FScore);
 
             // We can compute the model answers
             int[] answers = mlr.Decide(input1);

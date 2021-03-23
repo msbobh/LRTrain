@@ -5,6 +5,7 @@ using Accord.IO;
 using Funcs;
 using resources;
 using LearningRountines;
+using System.Diagnostics;
 
 
 
@@ -53,8 +54,15 @@ namespace AccordLogisticRegression
                 Console.WriteLine("Error opening file {0}", labelfile);
                 System.Environment.Exit(1);
             }
-                       
-                            
+
+            //
+            // Setup a timer
+            //
+            Stopwatch stopWatch = new Stopwatch();
+            string elapsedTime;
+            
+
+
             Console.WriteLine(" Logistic Regression (Accord.net) Training Utility Starting...\n");
             //Console.WriteLine("Learning 3 differernt Models: Profbablistic Coordinate Descent, Iterative Reweighted Least Squares, Conjugate Gradient Descent (BFGS)\n");
 
@@ -91,8 +99,13 @@ namespace AccordLogisticRegression
             // commenting this routine out, as it is a linear solver
             
             Console.WriteLine("Starting Probabilistic Coordinate Descent");
+            stopWatch.Start();
             int[] svmpredicts = MLAlgorithms.ProbabilisticCoordinateDescent (input1, output1, trainingfile);
             double svmaccuracy = Funcs.Utility.CalculateAccuraccy(svmpredicts, output1);
+            stopWatch.Stop();
+            var duration = stopWatch.Elapsed;
+            elapsedTime = $"{duration.Hours}:{duration.Minutes}:{duration.Seconds}.{duration.Milliseconds / 10}";
+            Console.WriteLine("Elapsed Time for training: " + elapsedTime);
 
             Console.Write(" Probablistic Coordinate Descent training Accuracy: ");
             Funcs.Utility.Printcolor(Math.Round(svmaccuracy * 100, 2), ConsoleColor.Red);
@@ -102,9 +115,15 @@ namespace AccordLogisticRegression
             
 
             Console.WriteLine("\nStarting Multinomial Logistic Regression using L-BFGS");
+            stopWatch.Stop();
             int[] BFGSPredicts = MLAlgorithms.MultiNomialLogisticRegressionBFGS (input1, output1, trainingfile.Replace(".csv", ".BFGS.save"));
             double BFGSAccuracy = Utility.CalculateAccuraccy (BFGSPredicts, output1);
+            stopWatch.Stop();
+            duration = stopWatch.Elapsed;
+            elapsedTime = $"{duration.Hours}:{duration.Minutes}:{duration.Seconds}.{duration.Milliseconds / 10}";
+            Console.WriteLine("Elapsed Time for training: " + elapsedTime);
             Console.Write(" Multinomial LR Training Accuracy => ");
+
             Funcs.Utility.Printcolor(Math.Round(BFGSAccuracy * 100,2),ConsoleColor.Red);
             Console.WriteLine();
 
@@ -119,12 +138,12 @@ namespace AccordLogisticRegression
 
             // Commenting out this method, it is too long running on the resume data set.
 
-            Console.WriteLine("starting Multinomial Log Regression w/ Lowerbound Newton Raphson");
+            /*Console.WriteLine("starting Multinomial Log Regression w/ Lowerbound Newton Raphson");
             int[] MNLRPredicts = MLAlgorithms.MultiNomialLogRegressionLowerBoundNewtonRaphson(input1, output1, trainingfile);
             double MNLRAccuracy = Funcs.Utility.CalculateAccuraccy(MNLRPredicts, output1);
             Console.Write ("Multinomial Logistic Regression using LB Newton Raphson Training Accuracy => ");
             Funcs.Utility.Printcolor (Math.Round(MNLRAccuracy * 100, 2), ConsoleColor.Red);
-            
+            */
         }
     }
 }

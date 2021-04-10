@@ -156,7 +156,7 @@ namespace LearningRountines
             return Funcs.Utility.BoolToInt(answers);
             
         }
-                static public int [] MultiNomialLogRegressionLowerBoundNewtonRaphson (double [][] input1, int[] labels, string SaveFile)
+        static public int [] MultiNomialLogRegressionLowerBoundNewtonRaphson (double [][] input1, int[] labels, string SaveFile)
         {
             // http://accord-framework.net/docs/html/T_Accord_Statistics_Models_Regression_MultinomialLogisticRegression.htm
             // Create a estimation algorithm to estimate the regression

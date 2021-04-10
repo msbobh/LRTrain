@@ -98,7 +98,7 @@ namespace AccordLogisticRegression
 
             // commenting this routine out, as it is a linear solver
             
-            Console.WriteLine("Starting Probabilistic Coordinate Descent");
+            Console.WriteLine("Starting Probabilistic Coordinate Descent(Support Vector Machine)");
             stopWatch.Start();
             int[] svmpredicts = MLAlgorithms.ProbabilisticCoordinateDescent (input1, output1, trainingfile);
             double svmaccuracy = Funcs.Utility.CalculateAccuraccy(svmpredicts, output1);

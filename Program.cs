@@ -11,6 +11,7 @@ using System.Diagnostics;
 
 namespace AccordLogisticRegression
 {
+    // Added a comment to check Vis = > git
     class Program
     {
         

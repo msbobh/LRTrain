@@ -6,8 +6,11 @@ using Funcs;
 using resources;
 using LearningRountines;
 using System.Diagnostics;
-
-
+using ICSharpCode.SharpZipLib.BZip2;
+using Accord.Statistics.Models.Regression.Fitting;
+using Accord.MachineLearning.Performance;
+using Accord.MachineLearning;
+using LRTrain;
 
 namespace AccordLogisticRegression
 {
@@ -61,7 +64,7 @@ namespace AccordLogisticRegression
             //
             Stopwatch stopWatch = new Stopwatch();
             string elapsedTime;
-            
+
 
 
             Console.WriteLine(" Logistic Regression (Accord.net) Training Utility Starting...\n");
@@ -108,7 +111,7 @@ namespace AccordLogisticRegression
             elapsedTime = $"{duration.Hours}:{duration.Minutes}:{duration.Seconds}.{duration.Milliseconds / 10}";
             Console.WriteLine("Elapsed Time for training: " + elapsedTime);
 
-            Console.Write(" Probablistic Coordinate Descent training Accuracy: ");
+            Console.Write(" Probablistic Coordinate Descent training Accuracy => ");
             Funcs.Utility.Printcolor(Math.Round(svmaccuracy * 100, 2), ConsoleColor.Red);
             // Compute the classification error as in SVM example
             double error = new Accord.Math.Optimization.Losses.ZeroOneLoss(output1).Loss(svmpredicts);
@@ -116,7 +119,7 @@ namespace AccordLogisticRegression
             
 
             Console.WriteLine("\nStarting Multinomial Logistic Regression using L-BFGS");
-            stopWatch.Stop();
+            stopWatch.Start();
             int[] BFGSPredicts = MLAlgorithms.MultiNomialLogisticRegressionBFGS (input1, output1, trainingfile.Replace(".csv", ".BFGS.save"));
             double BFGSAccuracy = Utility.CalculateAccuraccy (BFGSPredicts, output1);
             stopWatch.Stop();
@@ -128,23 +131,30 @@ namespace AccordLogisticRegression
             Funcs.Utility.Printcolor(Math.Round(BFGSAccuracy * 100,2),ConsoleColor.Red);
             Console.WriteLine();
 
-            // Commenting this algorithm out, after running for a few hours on a 25 sample resume file it got an out of memeory error
             
-            /*
-            Console.WriteLine("Starting Iterative Reweighted Least Squares");
+
             int[] IRLSPredicts = MLAlgorithms.IterativeLeastSquares(input1, output1, trainingfile);
             double IRLSAccuracy = Utility.CalculateAccuraccy (IRLSPredicts, output1);
             Console.WriteLine(" Iterative Least Squares (IRLS)\nAccuracy => {0}\n", Math.Round(IRLSAccuracy * 100, 2));
-            */
+
+            // Gradient descent test case
+            var temp = new GradientDescent (inputs: input1, labels: output1.ToDouble());
+            Console.WriteLine("Elapsed Time for Gradient Descent:{0}",temp.duration);
 
             // Commenting out this method, it is too long running on the resume data set.
 
-            /*Console.WriteLine("starting Multinomial Log Regression w/ Lowerbound Newton Raphson");
+            Console.WriteLine("starting Multinomial Log Regression w/ Lowerbound Newton Raphson");
+            stopWatch.Start();
             int[] MNLRPredicts = MLAlgorithms.MultiNomialLogRegressionLowerBoundNewtonRaphson(input1, output1, trainingfile);
             double MNLRAccuracy = Funcs.Utility.CalculateAccuraccy(MNLRPredicts, output1);
+            stopWatch.Stop();
+            duration = stopWatch.Elapsed;
+            elapsedTime = $"{duration.Hours}:{duration.Minutes}:{duration.Seconds}.{duration.Milliseconds / 10}";
+            
+            Console.WriteLine("Elapsed Time for training Lowerbound Newton Raphson: " + elapsedTime);
             Console.Write ("Multinomial Logistic Regression using LB Newton Raphson Training Accuracy => ");
             Funcs.Utility.Printcolor (Math.Round(MNLRAccuracy * 100, 2), ConsoleColor.Red);
-            */
+            
         }
     }
 }

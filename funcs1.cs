@@ -158,6 +158,28 @@ namespace Funcs
             Console.WriteLine();
         }
 
+        static public void OutPutConfusionMatrixStats(in int Numsamples, in int Numinputs, in double Precision, in double GCMAccuracy,
+            in int CMFalsePos, in int CMFalseNeg, in double CMFscore)
+        {
+            Console.WriteLine("  Generating a cross validation for the dataset");
+            Console.Write(strings.CrossVSamples);
+            Funcs.Utility.Printcolor(Numsamples, ConsoleColor.Yellow);
+            Console.Write(strings.CrossValFeatures);
+            Funcs.Utility.Printcolor(Numinputs, ConsoleColor.Yellow);
+            Console.Write(strings.Precision);
+            Funcs.Utility.Printcolor(Precision, ConsoleColor.Yellow);
+            Console.Write(strings.ConfusionAcc);
+            Funcs.Utility.Printcolor(Math.Round(GCMAccuracy * 100, 2), ConsoleColor.Red);
+            Console.WriteLine(strings.TrResults);
+            Console.Write(strings.FalsePos);
+            Funcs.Utility.Printcolor(CMFalsePos, ConsoleColor.Red);
+            Console.Write(strings.FalseNeg);
+            Funcs.Utility.Printcolor(CMFalseNeg, ConsoleColor.Red);
+            Console.Write(strings.Fscore);
+            Funcs.Utility.Printcolor(Math.Round(CMFscore, 2), ConsoleColor.Red);
+            Console.WriteLine();
+        }
+
     }
 
 }

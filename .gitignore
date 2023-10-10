@@ -22,3 +22,5 @@ obj/Debug/LRTrain.csprojAssemblyReference.cache
 obj/Debug/.NETFramework,Version=v4.7.2.AssemblyAttributes.cs
 obj/Debug/LRTrain.csproj.CoreCompileInputs.cache
 obj/Debug/DesignTimeResolveAssemblyReferencesInput.cache
+bin/Debug/labels.txt
+bin/Debug/resume.mat

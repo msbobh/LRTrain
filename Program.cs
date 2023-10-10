@@ -11,6 +11,8 @@ using Accord.Statistics.Models.Regression.Fitting;
 using Accord.MachineLearning.Performance;
 using Accord.MachineLearning;
 using LRTrain;
+using Accord.Statistics.Analysis;
+using Accord.DataSets;
 
 namespace AccordLogisticRegression
 {
@@ -137,9 +139,11 @@ namespace AccordLogisticRegression
             double IRLSAccuracy = Utility.CalculateAccuraccy (IRLSPredicts, output1);
             Console.WriteLine(" Iterative Least Squares (IRLS)\nAccuracy => {0}\n", Math.Round(IRLSAccuracy * 100, 2));
 
-            // Gradient descent test case
-            var temp = new GradientDescent (inputs: input1, labels: output1.ToDouble());
-            Console.WriteLine("Elapsed Time for Gradient Descent:{0}",temp.duration);
+            IrisData test = new IrisData(0);
+            //var  data = new CreateMNISTData();
+            var beep = new CreateMNISTDataset("yAcov");
+           
+            
 
             // Commenting out this method, it is too long running on the resume data set.
 

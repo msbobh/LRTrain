@@ -15,6 +15,7 @@ namespace resources
         static public string FalsePos = "     False Positives: ";
         static public string FalseNeg = "     False Negatives: ";
         static public string Fscore = "     Fscore: ";
+        static public string Precision = "Precision: ";
 
     }
 }
